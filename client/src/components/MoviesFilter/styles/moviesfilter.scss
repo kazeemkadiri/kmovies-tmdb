@@ -1,0 +1,22 @@
+.active_genre{
+    color: #fff;
+}
+
+.dropdown-item{
+    width: 260px;
+    color: darkgray;
+
+    &:hover{
+        color:inherit;
+        background: none;
+    }
+
+    .row{
+        .col-6:hover{
+            color: white;
+            background: inherit;
+        }
+    }
+
+    
+}

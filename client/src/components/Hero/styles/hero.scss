@@ -1,0 +1,14 @@
+.hero-header{
+    --bs-accordion-bg: #050c16;
+    --bs-accordion-color: white;
+    --bs-accordion-active-bg: none;
+    --bs-accordion-active-color: none;
+    --bs-accordion-border-color: none;
+    background-color: var(--bs-accordion-bg);
+    color: var(--bs-accordion-color);
+    border: none;
+
+    button {
+        color: white;
+    }
+}

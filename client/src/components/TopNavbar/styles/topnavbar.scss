@@ -1,0 +1,12 @@
+.nav-bg-color{
+    background-color: var(--site-bg-color);
+}
+
+.nav-text-color *{
+    color: var(--site-text-color)
+}
+
+.navbar-brand a,.nav-items a{
+    text-decoration: none;
+}
+
