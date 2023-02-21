@@ -1,8 +1,8 @@
 {
-  "name": "mip",
+  "name": "kmovies",
   "version": "1.0.0",
-  "repository": "https://github.com/niiyy/mern.git",
-  "author": "niiyy",
+  "repository": "",
+  "author": "kazeemkadiri",
   "license": "MIT",
   "devDependencies": {
     "prettier": "^2.6.2"
