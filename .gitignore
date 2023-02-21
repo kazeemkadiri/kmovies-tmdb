@@ -10,6 +10,7 @@ server/dist
 server/node_modules
 server/app.logs.log
 server/.env
+server/**/*.js
 
 ### UI
 client/node_modules
