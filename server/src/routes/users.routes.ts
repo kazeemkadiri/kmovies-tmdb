@@ -14,10 +14,10 @@ router.post('/login', (req: Request, res: Response, next: NextFunction) =>
 router.post('/jwtid', (req: Request, res: Response, next: NextFunction) => {
   _AuthService
     .validateToken(req.cookies.jwt ?? null)
-    .then((userId) => {
+    .then((userId: any) => {
       res.status(200).send(userId)
     })
-    .catch((err) => {
+    .catch((err: any) => {
       res.status(401).send(err)
     })
 })
