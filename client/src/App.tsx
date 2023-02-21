@@ -17,7 +17,7 @@ function App() {
 
   
   return (
-    <div className='container-fluid'>
+    <div className='container'>
       <div className='container'>
         <TopNavbar />
       </div>

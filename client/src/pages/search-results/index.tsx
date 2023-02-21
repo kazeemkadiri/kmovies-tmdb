@@ -7,7 +7,7 @@ import useMovies from "../../hooks/useMovies";
 import { useAppDispatch, useAppSelector } from "../../hooks/useStore";
 import { RootState } from "../../redux/store";
 import ReactPaginate from "react-paginate";
-import { SET_SEARCH_MOVIES_LIST } from "../../redux/actions";
+import { SET_SEARCH_MOVIES_LIST, CLEAR_SEARCH_MOVIES_LIST } from "../../redux/actions";
 import { Col, Row } from "react-bootstrap";
 
 const SearchResults = () => {
@@ -20,29 +20,42 @@ const SearchResults = () => {
     let moviesSearchRedux: { searchMoviesList: TMDBMovie[] } = useAppSelector((state: RootState) => state.movies )
     const moviesSearchInStore = useMemo(() => (moviesSearchRedux.searchMoviesList), [moviesSearchRedux.searchMoviesList])
     const [pageMovies, setPageMovies] = useState<TMDBMovie[]>([])
+    const searchquery = useMemo(() => params.searchquery, [params.searchquery])
 
     useEffect(() => {
-      const {searchquery} =  params;
+      if(searchquery){
+        
+        dispatch({ type: CLEAR_SEARCH_MOVIES_LIST, payload: []});
 
-      (async () => {
+        (async () => {
+          const moviesArray = await searchMovies( params.searchquery === undefined ? '' : params.searchquery )
+        
+          saveSearchResultsToStore(moviesArray)
+        })()
+      }else{
+        navigate('/movies')
+      }
 
-        const moviesArray = await searchMovies( searchquery === undefined ? '' : searchquery )
-       
-        saveSearchResultsToStore(moviesArray)
-      })()
-    }, [params.searchquery])
+    }, [searchquery, navigate])
+
+    useEffect(() => {
+
+      if(moviesSearchInStore && moviesSearchInStore.length === 0){
+      
+        setMoviesArr([])  
+      
+      }
+
+      setMoviesArr(moviesSearchInStore)
+    },[moviesSearchInStore])
 
     useEffect(() => {
       if(typeof moviesArr === 'undefined') return
-
+    
       const selectedMoviesList = moviesArr.slice(0, perPage)
       
       setPaginatedPageMovies( selectedMoviesList )
     },[moviesArr])
-
-    useEffect(() => {
-      setMoviesArr(moviesSearchInStore)
-    }, [moviesSearchInStore])
 
     const saveSearchResultsToStore = (moviesArray: TMDBMovie[]) => {
       dispatch({
@@ -52,7 +65,7 @@ const SearchResults = () => {
     }
 
     const showSelectedMoviePage = (movie: TMDBMovie) => {
-        navigate(`/movies/${slug(movie.originalTitle)}/${movie.id}`)
+        navigate(`/movies/${movie.id}`)
     }
 
     const setPaginatedPageMovies = (movies: TMDBMovie[]) => {
@@ -66,13 +79,13 @@ const SearchResults = () => {
     const handlePageClick = (data: any) => {
       scrollToTop()
 
-      let selected = data.selected;
-      
-      let offset = Math.ceil(selected * perPage);
+      let selected = data.selected
+    
+      let offset = Math.ceil(selected * perPage)
       
       const selectedMovieList = moviesArr.slice(offset, offset + perPage)
       
-      setPaginatedPageMovies( selectedMovieList )
+      setPaginatedPageMovies( selectedMovieList )      
     };
 
     if(!pageMovies || !moviesArr){
@@ -111,10 +124,11 @@ const SearchResults = () => {
               nextClassName="page-item"
               nextLinkClassName="page-link"
               activeClassName="active"
-              initialPage={1}
+              hrefAllControls={true}
+              initialPage={0}
               // eslint-disable-next-line no-unused-vars
               hrefBuilder={(page, pageCount, selected) =>
-                page >= 1 && page <= pageCount ? `/search/page/${page}` : '#'
+                (page >= 1 && page <= pageCount ? `/movies/page/${page}` : '#')
               }
               onClick={(clickEvent) => {
                 return

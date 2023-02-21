@@ -10,16 +10,18 @@ const initialState: { moviesList: TMDBMovie[], searchMoviesList: TMDBMovie[] } =
 const moviesReducer = (state = initialState, action: PayloadAction<any>) => {
   switch (action.type) {
     case SET_MOVIES_LIST:
+      console.log('movies list: ', JSON.stringify({ ...state, moviesList: action.payload }))
       return { ...state, moviesList: action.payload }
       break;
     case SET_SEARCH_MOVIES_LIST:
       return { ...state, searchMoviesList: action.payload }
       break;
     case CLEAR_MOVIES_LIST:
-      return {...state, moviesList: []}
+      return {...state, moviesList: action.payload}
       break;
     case CLEAR_SEARCH_MOVIES_LIST:
-      return {...state, searchMoviesList: []}
+      return {...state, searchMoviesList: action.payload}
+      break;
     default:
       return state
   }

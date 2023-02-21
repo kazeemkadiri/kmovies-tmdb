@@ -5,7 +5,7 @@ const VideoPlayer = (props: { movie: TMDBMovie, options?: { height: string, widt
     const { height, width } = props.options || {};
 
     const ytPlayerOpts = {
-        height: height ? height : '390',
+        height: height ? height : '360',
         width: width ? width : '640',
         playerVars: {
           // https://developers.google.com/youtube/player_parameters

@@ -16,7 +16,7 @@ const useMovies = () => {
         })
 
         try{
-            const allMovies = await axios.get(`${baseURL}/video/all`)
+            const allMovies = await axios.get(`${baseURL}/movie/all`)
 
             toast.dismiss()
 

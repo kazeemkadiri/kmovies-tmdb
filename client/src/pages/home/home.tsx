@@ -47,35 +47,36 @@ const Home = () => {
     setPaginatedPageMovies( selectedMovieList )
   }, [currentPage])
 
-  useEffect(() => {    
-    (async () => {
+  useEffect(() => {   
+    if(location.pathname !== '/movies') return
+
+    if(!homeMoviesInStore || homeMoviesInStore.length === 0) {
+      (async () => {
         await showHomePageMovies()
-    })()
-  }, [ location.pathname ])
-
-  useEffect(() => {
-      if(!homeMoviesInStore || homeMoviesInStore.length === 0) return
-
-      setAllMovies( homeMoviesInStore )
-  }, [homeMoviesInStore])
-
-  useEffect(() => {
-    const viewingPage: string = location.pathname.split('/')[1]
-
-    switch(viewingPage){
-      case 'movie':
-        setVideoType(VideoTypes.MOVIE)
-        break;
-      case 'tv_show':
-        setVideoType(VideoTypes.TV_SHOW)
-        break;
-      case 'all':
-        setVideoType(VideoTypes.ALL)
-        break;
-      default:
-        setVideoType(VideoTypes.MOVIE)
+      })()
+    }else if(homeMoviesInStore && homeMoviesInStore.length > 0){
+      setAllMovies(homeMoviesInStore)
+      return
     }
-  },[location.pathname])
+  }, [ location.pathname, homeMoviesInStore ])
+
+  // useEffect(() => {
+  //   const viewingPage: string = location.pathname.split('/')[1]
+
+  //   switch(viewingPage){
+  //     case 'movie':
+  //       setVideoType(VideoTypes.MOVIE)
+  //       break;
+  //     case 'tv_show':
+  //       setVideoType(VideoTypes.TV_SHOW)
+  //       break;
+  //     case 'all':
+  //       setVideoType(VideoTypes.ALL)
+  //       break;
+  //     default:
+  //       setVideoType(VideoTypes.MOVIE)
+  //   }
+  // },[location.pathname])
 
   // This hook call will initialize the pagination of movies
   useEffect(() => {
@@ -96,13 +97,12 @@ const Home = () => {
     dispatch({ type: SET_MOVIES_LIST, payload: movies })
   }
 
-  const showHomePageMovies = async () => {
-    if(homeMoviesInStore && homeMoviesInStore.length > 0){
-      setAllMovies(homeMoviesInStore)
-      return
-    }
-    
+  const showHomePageMovies = async () => {    
     const movies = await getAllMovies()
+
+    // This check is important so as to prevent infinite loop
+    // due to redux store value change
+    if(movies && movies.length === 0) return
 
     const shuffledMovies = shuffle(movies)
 
@@ -115,7 +115,7 @@ const Home = () => {
   }
 
   const handleReset = async () => {
-    dispatch({ type: CLEAR_MOVIES_LIST })
+    dispatch({ type: CLEAR_MOVIES_LIST, payload: [] })
   }
 
   const renderByReleaseYear = async (year: number) => {
@@ -127,7 +127,7 @@ const Home = () => {
   } 
 
   const showSelectedMoviePage = (movie: TMDBMovie) => {
-    navigate(`/movies/${slug(movie.originalTitle)}/${movie.id}`)
+    navigate(`/movies/${movie.id}`)
   }
 
   const scrollToTop = () => {
@@ -152,10 +152,10 @@ const Home = () => {
       <Hero />
       {/* Hero */}
       <section className="row">
-        <div className='col-auto'>
+        <div className='col-sm-12 col-md-2'>
           <MovieTypes />
         </div>
-        <div className="col">
+        <div className="col-sm-12 col-md-10">
           <MoviesFilter 
             renderNewMovielist={renderNewMovieList}
             renderByReleaseYear={renderByReleaseYear}
@@ -164,17 +164,14 @@ const Home = () => {
       </section>
 
       {/* Movies list */}
-      <Row className="mt-5">
-        {/* For TMDB */}
+      <Row className="mt-5 mx-0">
         {
           hasMovies() && pageMovies.map((movie: TMDBMovie, index: number) => {
 
             return (
-              
-                <Col className="h-sm-auto mb-2" key={index} sm={12} md={3} lg={2} style={{ cursor: "pointer" }} onClick={() => { showSelectedMoviePage(movie)}}>
-                    <MovieCard movie={movie} />
-                </Col>
-
+              <Col className="h-sm-auto mb-2 mx-0 px-1" key={index} sm={12} md={3} lg={2} style={{ cursor: "pointer" }} onClick={() => { showSelectedMoviePage(movie)}}>
+                  <MovieCard movie={movie} />
+              </Col>
             )
           })
         }
@@ -199,6 +196,8 @@ const Home = () => {
             nextClassName="page-item"
             nextLinkClassName="page-link"
             activeClassName="active"
+            hrefAllControls={true}
+            initialPage={0}
             // eslint-disable-next-line no-unused-vars
             hrefBuilder={(page, pageCount, selected) =>
               (page >= 1 && page <= pageCount ? `/movies/page/${page}` : '#')
