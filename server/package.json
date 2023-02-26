@@ -42,7 +42,7 @@
   },
   "scripts": {
     "watch": "nodemon",
-    "test": "jest",
+    "test": "jest --watchAll",
     "build": "tsc",
     "start": "node src/index.js"
   }
