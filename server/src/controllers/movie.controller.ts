@@ -1,17 +1,17 @@
 import express from 'express'
 
 // @ts-ignore
-import { Tmdb } from '@dills1220/tmdb'
+import Tmdb from '@dills1220/tmdb'
 import response from '@utils/response'
-import Movies from '@models/movies';
+import Movies from '@models/movies.model';
 
-let TmdbInstance =  new Tmdb(process.env.TMDB_API_KEY);
+let TmdbInstance = new Tmdb(process.env.TMDB_API_KEY);
 
 const getMovieVideos = async (
     req: express.Request,
     res: express.Response
   ): Promise<express.Response<any, Record<string, any>> | undefined> => {
-    
+
     const movieId = req.params.id;
 
     try{    
@@ -41,6 +41,7 @@ const getMovieVideos = async (
 }
 
 const searchForMovies = async (searchParam: string, page: number) => {
+  
   return await TmdbInstance.get('search/movie', { query: searchParam, page })
 }
 
@@ -88,6 +89,7 @@ const getMoviesByGenre = async (
 }
 
 const getByReleaseYear = async (page: number, releaseYear: number, allVideos: any[]) => {
+  
   const response = await TmdbInstance.get(`/discover/movie?language=en-US&
                                           &include_adult=false&include_video=false
                                           &page=${page}
