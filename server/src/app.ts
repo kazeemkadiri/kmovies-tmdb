@@ -20,24 +20,18 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-if(process.env.NODE_ENV === 'production'){
-  app.use(express.static(path.resolve(__dirname, 'public')))
-
-  app.get('*', (req: Request, res: Response, next: NextFunction) => {
-    res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
-  })
-}
-
-app.get('/', (req: Request, res: Response) => {
-  res.json({
-    message: 'Welcome to Kmovies API.',
-  })
-})
+app.use(express.static(path.resolve(__dirname, 'public')))
 
 app.use('/api/users', usersRoutes)
 app.use('/api/movie', movieRoutes)
 
+if(process.env.NODE_ENV === 'production'){
 
+  app.get('*', (req: Request, res: Response, next: NextFunction) => {
+    res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+  })
+  
+}
 
 // !
 // TODO: catch error !
