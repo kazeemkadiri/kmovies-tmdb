@@ -1,7 +1,7 @@
 import express from 'express'
 
 // @ts-ignore
-import Tmdb from '@dills1220/tmdb'
+import { Tmdb } from '@dills1220/tmdb'
 import response from '@utils/response'
 import Movies from '@models/movies.model';
 
@@ -163,12 +163,9 @@ const getAllMovies = async (
   req: express.Request,
   res: express.Response
 ): Promise<express.Response<any, Record<string, any>> | undefined> => {
-  //const videoGenres = ['action', 'adventure', 'animation', 'biography', 'comedy']
-
-  // const TMDBVideos = await  searchMoviesByGenre([...videoGenres], []) 
-  const TMDBVideos: any = await Movies.find({}).exec()
+  const TMDBVideos: any = await Movies.findOne({})
   
-  return response.send(res, 200, TMDBVideos[0].content, false)
+  return response.send(res, 200, TMDBVideos.content, false)
 }
 
 export default {
