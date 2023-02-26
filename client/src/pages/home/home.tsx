@@ -29,10 +29,7 @@ const Home = () => {
   const params = useParams()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const perPage = 24
-  const homeMoviesRedux: { moviesList: TMDBMovie[] } = useAppSelector((state: RootState) => state.movies )
-  const homeMoviesInStore = useMemo(() => (homeMoviesRedux.moviesList), [homeMoviesRedux.moviesList])
-  
+  const perPage = 24  
 
   const currentPage = useMemo(() => {
     return parseInt(params.pagenum || '1')
@@ -50,21 +47,17 @@ const Home = () => {
   useEffect(() => {   
     if(location.pathname !== '/movies') return
 
-    if(!homeMoviesInStore || homeMoviesInStore.length === 0) {
       (async () => {
         await showHomePageMovies()
       })()
-    }else if(homeMoviesInStore && homeMoviesInStore.length > 0){
-      setAllMovies(homeMoviesInStore)
-      return
-    }
-  }, [ location.pathname, homeMoviesInStore ])
+    
+  }, [ location.pathname ])
 
   // useEffect(() => {
   //   const viewingPage: string = location.pathname.split('/')[1]
 
   //   switch(viewingPage){
-  //     case 'movie':
+  //     case 'movie':[
   //       setVideoType(VideoTypes.MOVIE)
   //       break;
   //     case 'tv_show':
@@ -85,28 +78,16 @@ const Home = () => {
     setPaginatedPageMovies( first24Movies )
   },[ allMovies ])
 
-  const hasMovies = () => {
-    return pageMovies && (pageMovies.length > 0)
-  }
-
   const setPaginatedPageMovies = (movies: TMDBMovie[]) => {
     setPageMovies( movies )
-  }
-
-  const saveHomeMoviesInStore = (movies: TMDBMovie[] | unknown[]) => {
-    dispatch({ type: SET_MOVIES_LIST, payload: movies })
   }
 
   const showHomePageMovies = async () => {    
     const movies = await getAllMovies()
 
-    // This check is important so as to prevent infinite loop
-    // due to redux store value change
-    if(movies && movies.length === 0) return
-
     const shuffledMovies = shuffle(movies)
 
-    saveHomeMoviesInStore(shuffledMovies)
+    setAllMovies(shuffledMovies)
   }
 
   const renderNewMovieList = (moviesArray: []) => {
@@ -166,7 +147,7 @@ const Home = () => {
       {/* Movies list */}
       <Row className="mt-5 mx-0">
         {
-          hasMovies() && pageMovies.map((movie: TMDBMovie, index: number) => {
+          pageMovies && pageMovies.length > 0 && pageMovies.map((movie: TMDBMovie, index: number) => {
 
             return (
               <Col className="h-sm-auto mb-2 mx-0 px-1" key={index} sm={12} md={3} lg={2} style={{ cursor: "pointer" }} onClick={() => { showSelectedMoviePage(movie)}}>
@@ -177,7 +158,7 @@ const Home = () => {
         }
 
         {
-          hasMovies() && <div className='col-12'>
+          pageMovies && pageMovies.length > 0 && <div className='col-12'>
           <ReactPaginate
             previousLabel="previous"
             nextLabel="next"

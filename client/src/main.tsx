@@ -43,9 +43,9 @@ const router = createBrowserRouter([
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <RouterProvider router={router} />
-    </PersistGate>
-  </Provider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
+    </Provider>
 )

@@ -23,7 +23,7 @@ const useMovies = () => {
             if(true === allMovies.data.error){
                 throw new Error()
             }
-
+          
             return allMovies.data.result
         }catch(err){
             console.log(err)

@@ -53,7 +53,7 @@ const MoviePage = (props: any) => {
         (<section className='row'>
             {/* Movie banner */}
             <article className='col-12 d-flex flex-column justify-contents-center align-items-center position-relative' style={{ height: "360px" }}>
-                <img className='w-100 position-relative' style={{ height: 'inherit' }} src={ hasContent('movieBanner') ? `${ moviesImagesRepo }${ getMovieBannerPath()}`: '/assets/no-banner.jpg' } alt={ movieFullDetails.mainMovie.originalTitle }  />
+                <img className='w-100 position-relative' style={{ height: 'inherit' }} src={ hasContent('movieBanner') ? `${ moviesImagesRepo }${ getMovieBannerPath()}`: 'https://kmovies.fly.dev/assets/no-banner.jpg' } alt={ movieFullDetails.mainMovie.originalTitle }  />
                 
                 {/* The video player is placed above the backdrop image */}
                 <div className='position-absolute w-100 text-center' style={{ top: '10px' }}>
@@ -84,7 +84,7 @@ const MoviePage = (props: any) => {
                         {/* Movie title header */}
                         <div className="d-flex align-items-end col-12">
                             <h3 className="text-white">{ getMovieTitle() } </h3>
-                            &nbsp;&nbsp;<h4>({ getMovieYear() })</h4>
+                            { getMovieYear() && (<h4>&nbsp;&nbsp;({ getMovieYear() })</h4>) }
                         </div>
 
                         {/* Movie trailers, featurettes */}

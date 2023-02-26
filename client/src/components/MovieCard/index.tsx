@@ -9,7 +9,7 @@ const MovieCard = (props: {movie: TMDBMovie}) => {
             <Card.Text className='h-100'>
               <img 
                 className='img-fluid h-100' 
-                src={!props.movie.posterPath ? '/assets/no-image.png' : `https://image.tmdb.org/t/p/original/${props.movie.posterPath}`} 
+                src={!props.movie.posterPath ? 'https://kmovies.fly.dev/assets/no-image.png' : `https://image.tmdb.org/t/p/original/${props.movie.posterPath}`} 
                 alt={props.movie.originalTitle} />
             </Card.Text>
           </Card.Body>
